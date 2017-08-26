@@ -1,0 +1,22 @@
+
+CREATE TABLE user(
+	 id INT(11) AUTO_INCREMENT PRIMARY KEY,
+	 name VARCHAR(100),
+	 email VARCHAR(100), 
+	 username VARCHAR(30), 
+	 password VARCHAR(100), 
+	 date_joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+ );
+
+
+
++-------------+--------------+------+-----+-------------------+----------------+
+| Field       | Type         | Null | Key | Default           | Extra          |
++-------------+--------------+------+-----+-------------------+----------------+
+| id          | int(11)      | NO   | PRI | NULL              | auto_increment |
+| name        | varchar(100) | YES  |     | NULL              |                |
+| email       | varchar(100) | YES  |     | NULL              |                |
+| username    | varchar(30)  | YES  |     | NULL              |                |
+| password    | varchar(100) | YES  |     | NULL              |                |
+| date_joined | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
++-------------+--------------+------+-----+-------------------+----------------+
