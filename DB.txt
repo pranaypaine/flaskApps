@@ -20,3 +20,11 @@ CREATE TABLE user(
 | password    | varchar(100) | YES  |     | NULL              |                |
 | date_joined | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
 +-------------+--------------+------+-----+-------------------+----------------+
+
+CREATE TABLE articles(
+	id INT(11) AUTO_INCREMENT PRIMARY KEY,
+	title VARCHAR(100),
+	author VARCHAR(100),
+	body TEXT,
+	date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

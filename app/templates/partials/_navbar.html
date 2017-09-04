@@ -24,17 +24,25 @@
             </div>
           </li> -->
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>&nbsp;
         <ul class="navbar-nav">
+        {% if not session.logged_in %}
           <li class="nav-item">
             <a href="/login"><button class="btn btn-outline-success my-2 my-sm-0">Login</button></a>&nbsp;
           </li>
           <li class="nav-item">
             <a href="/register"><button class="btn btn-outline-success my-2 my-sm-0">Register</button></a>&nbsp;
           </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">{{session.username|title}}</a>
+          </li>
+          <li class="nav-item">
+            <a href="/logout"><button class="btn btn-outline-success my-2 my-sm-0">Logout</button></a>&nbsp;
+          </li>
+          {% endif %}
         </ul>
       </div>
     </nav>

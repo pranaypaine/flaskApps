@@ -12,9 +12,10 @@ class RegisterForm(Form):
 
 class LoginForm(Form):
 	"""docstring for LoginForm"""
-	username = StringField('Username', [validators.Length(min=4, max=25), validators.DataRequired()])
-	password = PasswordField('Password', [validators.DataRequired()])
-	def __init__(self, arg):
-		super(LoginForm, self).__init__()
-		self.arg = arg
+	username = StringField('username')
+	password = PasswordField('password')
 		
+
+class ArticleForm(Form):
+	title = StringField('Title', [validators.Length(min=1, max=200)])
+	body = TextAreaField('Body', [validators.Length(min=30)])
