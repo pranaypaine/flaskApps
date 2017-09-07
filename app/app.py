@@ -1,11 +1,9 @@
 #libraries 
 from flask import Flask, render_template, flash, url_for, session, logging, redirect, request
 from flask_mysqldb import MySQL
-# from wtforms import *
 from passlib.hash import sha256_crypt
 
 #files
-from data import Articles
 from forms import RegisterForm, LoginForm, ArticleForm
 from decorators import login_required, is_loggedin
 
@@ -21,10 +19,6 @@ app.config['MYSQL_DB'] = 'flaskApp'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 # init MYSQL
 mysql = MySQL(app)
-
-
-#app initiation
-Articles = Articles()
 
 
 @app.route('/')
@@ -58,10 +52,6 @@ def register():
 
 		flash('You are now registered', 'success')
 		return redirect(url_for('login'))
-
-
-		# return render_template('register.html')
-
 	return render_template('register.html', form = form)
 
 
@@ -73,14 +63,11 @@ def login():
 	if request.method == 'POST' and form.validate():
 		username = form.username.data
 		password = form.password.data
-		
 		cur = mysql.connection.cursor()
-
 		result = cur.execute("SELECT * FROM users WHERE username = %s", [username])
 		if result > 0:
 			data = cur.fetchone()
 			db_password = data['password']
-
 			if sha256_crypt.verify(password, db_password):
 				session['logged_in'] = True
 				session['username'] = username
@@ -89,11 +76,8 @@ def login():
 				return redirect(url_for('dashboard'))
 			else:
 				flash('Your password is incorrect', 'danger')
-
 		else:
-			flash('No user found with these details', 'danger')
-
-		
+			flash('No user found with these details', 'danger')		
 	return render_template('login.html', form = form)
 	
 
@@ -102,44 +86,54 @@ def logout():
 	session.clear()
 	flash('You are now logged out', 'success')
 	return redirect(url_for('login'))
-	pass
+
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
-	return render_template('dashboard.html')
+	cur = mysql.connection.cursor()
+	# Get articles
+	result = cur.execute("SELECT * FROM articles")
+	articles = cur.fetchall()
+	if result > 0:
+		return render_template('dashboard.html', articles=articles)
+	else:
+		flash('No Articles Found', 'danger')
+		return render_template('dashboard.html')
+	# Close connection
+	cur.close()
+
 	
 @app.route('/addarticle', methods=['GET', 'POST'])
 @login_required
 def add_article():
 	form = ArticleForm(request.form)
-
 	if request.method == 'POST' and form.validate():
 		title = form.title.data
 		body = form.body.data
-		
-		
 		# mysql connection
-
 		cur = mysql.connection.cursor()
-
 		cur.execute("INSERT INTO articles(title, body, author) values(%s, %s, %s)",(title, body, session['username']))
 		mysql.connection.commit()
 		cur.close()
-
 		flash('Article succesfully added', 'success')
 		return redirect(url_for('dashboard'))
-
-
 	return render_template('addarticle.html', form = form)
-
-	pass
 
 @app.route('/articles')
 def articles():
-
-	return render_template('articles.html', articles = Articles)
-
+	cur = mysql.connection.cursor()
+	# Get articles
+	result = cur.execute("SELECT * FROM articles")
+	articles = cur.fetchall()
+	if result > 0:
+		return render_template('articles.html', articles=articles)
+	else:
+		flash('No Articles Found', 'danger')
+		return render_template('articles.html')
+	# Close connection
+	cur.close()
+	
 
 @app.route('/article/<string:id>')
 def article(id):

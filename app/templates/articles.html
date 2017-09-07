@@ -2,9 +2,16 @@
 
 {% block body %}
 <h1>Articles</h1>
-<ul class="list-group">
+<div class="row">
 {% for article in articles %}
-	<li class="list-group-item"><a href="/article/{{ article.id }}">{{ article.title }}</a></li>
+<div class="card">
+  <div class="card-block">
+    <h4 class="card-title">{{ article.title }}</h4>
+    <h6 class="card-subtitle mb-2 text-muted">{{article.date_created.strftime('%Y-%m-%d')}}</h6>
+    <p class="card-text">{{article.body | safe}}</p>
+    <a href="#" class="card-link">View</a>    
+  </div>
+</div>	
 {% endfor %}
-</ul>
+</div>
 {% endblock %}
