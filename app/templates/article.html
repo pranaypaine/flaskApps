@@ -1,7 +1,12 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-
-<h1>{{ id }}</h1>
-
+{% if article %}
+<h1>{{ article.title|title }}</h1>
+<small><b>Written by {{ article.author }} on {{article.date_created.strftime('%D')}}</b></small>
+<hr>
+<div>
+	{{ article.body|safe }}
+</div>
+{% endif %}
 {% endblock %}

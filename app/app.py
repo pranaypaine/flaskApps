@@ -21,6 +21,8 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 
+
+# Frontend website
 @app.route('/')
 def index():
     return render_template('home.html')
@@ -88,6 +90,38 @@ def logout():
 	return redirect(url_for('login'))
 
 
+@app.route('/articles')
+def articles():
+	cur = mysql.connection.cursor()
+	# Get articles
+	result = cur.execute("SELECT * FROM articles")
+	articles = cur.fetchall()
+	if result > 0:
+		return render_template('articles.html', articles=articles)
+	else:
+		flash('No Articles Found', 'danger')
+		return render_template('articles.html')
+	# Close connection
+	cur.close()
+	
+
+@app.route('/article/<string:id>')
+def article(id):
+	cur = mysql.connection.cursor()
+	# Get articles
+	result = cur.execute("SELECT * FROM articles WHERE id = %s", [id])
+	article = cur.fetchone()
+	if result > 0:
+		return render_template('article.html', article=article)
+	else:
+		flash('No Article Found', 'danger')
+		return render_template('article.html')
+	# Close connection
+	cur.close()
+	return render_template('article.html')
+
+
+#dashboard Functionalities
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -120,24 +154,33 @@ def add_article():
 		return redirect(url_for('dashboard'))
 	return render_template('addarticle.html', form = form)
 
-@app.route('/articles')
-def articles():
+
+@app.route('/article/edit/<string:id>', methods=['GET', 'POST'])
+@login_required
+def edit_article(id):
 	cur = mysql.connection.cursor()
 	# Get articles
-	result = cur.execute("SELECT * FROM articles")
-	articles = cur.fetchall()
-	if result > 0:
-		return render_template('articles.html', articles=articles)
-	else:
-		flash('No Articles Found', 'danger')
-		return render_template('articles.html')
-	# Close connection
+	result = cur.execute("SELECT * FROM articles WHERE id = %s", [id])
+	article = cur.fetchone()
 	cur.close()
-	
+	form = ArticleForm(request.form)
 
-@app.route('/article/<string:id>')
-def article(id):
-	return render_template('article.html', id = id)
+	form.title.data = article['title']
+	form.body.data = article['body']
+
+	if request.method == 'POST' and form.validate():
+		title = request.form['title']
+		body = request.form['body']
+		# mysql connection
+		cur = mysql.connection.cursor()
+		cur.execute("UPDATE articles SET title=%s, body=%s WHERE id=%s", [title, body, id])
+		mysql.connection.commit()
+		print cur
+		cur.close()
+		flash('Article succesfully updated', 'success')
+		return redirect(url_for('dashboard'))
+	return render_template('edit_article.html', form = form)
+	pass
 
 
 if __name__ == '__main__':
