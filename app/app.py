@@ -21,6 +21,10 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 
+#error pages
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('errorpages/404.html')
 
 # Frontend website
 @app.route('/')
@@ -180,8 +184,11 @@ def edit_article(id):
 		flash('Article succesfully updated', 'success')
 		return redirect(url_for('dashboard'))
 	return render_template('edit_article.html', form = form)
-	pass
 
+@app.route('/atricle/delete/<string:id>')
+@login_required
+def delete_article():
+	pass
 
 if __name__ == '__main__':
     app.run()
