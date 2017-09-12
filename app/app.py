@@ -179,15 +179,20 @@ def edit_article(id):
 		cur = mysql.connection.cursor()
 		cur.execute("UPDATE articles SET title=%s, body=%s WHERE id=%s", [title, body, id])
 		mysql.connection.commit()
-		print cur
 		cur.close()
 		flash('Article succesfully updated', 'success')
 		return redirect(url_for('dashboard'))
 	return render_template('edit_article.html', form = form)
 
-@app.route('/atricle/delete/<string:id>')
+@app.route('/atricle/delete/<string:id>', methods=['POST'])
 @login_required
-def delete_article():
+def delete_article(id):
+	cur = mysql.connection.cursor()
+	cur.execute("DELETE FROM articles WHERE id = %s", [id])
+	mysql.connection.commit()
+	cur.close()
+	flash('Article succesfully deleted', 'success')
+	return redirect(url_for('dashboard'))
 	pass
 
 if __name__ == '__main__':
