@@ -1,0 +1,39 @@
+{% extends 'includes/layout.html' %}
+
+{% block body %}
+
+<div class="container">
+	<ul class="collection with-header">
+        <li class="collection-header"><h4>Process list</h4></li>
+        <li class="collection-item"><div>This is one<a href="#!" class="secondary-content"><i class="material-icons red-text">delete</i></a></div></li>
+        <li class="collection-item"><div>This is two<a href="#!" class="secondary-content"><i class="material-icons red-text">delete</i></a></div></li>
+        <li class="collection-item"><div>This is three<a href="#!" class="secondary-content"><i class="material-icons red-text">delete</i></a></div></li>
+        <li class="collection-item"><div>This is four<a href="#!" class="secondary-content"><i class="material-icons red-text">delete</i></a></div></li>
+	</ul>
+</div>
+
+<div class="container">
+	<ul class="collection with-header">
+        <li class="collection-header"><h4>Past Process</h4></li>
+        <li class="collection-item"><div>This is one</div></li>
+        <li class="collection-item"><div>This is two</div></li>
+        <li class="collection-item"><div>This is three</div></li>
+        <li class="collection-item"><div>This is four</div></li>
+	</ul>
+</div>
+
+<div class="fixed-action-btn vertical">
+	<a class="btn-floating btn-large red z-depth-5 modal-trigger" href="#add">
+	  <i class="large material-icons">add</i>
+	</a>
+</div>
+
+<!-- Modal Structure -->
+<div id="add" class="modal">
+<div class="modal-content">
+  <h4>Add a Process</h4>
+  
+</div>
+</div>
+          
+{% endblock %}
